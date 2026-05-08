@@ -1,0 +1,7 @@
+docling
+python-docx
+streamlit
+anthropic
+chromadb
+sentence-transformers
+anthropic
