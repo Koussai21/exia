@@ -286,7 +286,7 @@ if st.session_state["resultats"] is None:
                 with st.spinner("Lecture du document et extraction des exigences en cours..."):
                     try:
                         response = requests.post(
-                            "http://localhost:8000/analyser",
+                            "https://exia-production-e983.up.railway.app/analyser",
                             files={"fichier": (fichier.name, fichier, "application/octet-stream")},
                             timeout=300
                         )

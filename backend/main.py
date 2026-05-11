@@ -5,6 +5,7 @@ import anthropic
 import tempfile
 import os
 import json
+import uvicorn
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -189,5 +190,4 @@ def get_tache(id: str):
     raise HTTPException(status_code=404, detail=f"Tâche {id} introuvable")
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
