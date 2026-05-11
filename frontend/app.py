@@ -58,10 +58,9 @@ html, body, [class*="css"] {
 .exigence-header {
     background: #1C1F2E;
     border-left: 4px solid #3A3D4E;
-    border-radius: 0 6px 0 0;
+    border-radius: 6px 6px 0 0;
     padding: 1rem 1.5rem 0.75rem 1.5rem;
     margin-bottom: 0;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
 }
 
 .exigence-header.doublon { border-left-color: #E8A020; }
@@ -110,6 +109,80 @@ html, body, [class*="css"] {
     text-transform: uppercase;
 }
 
+/* Carte reformulation */
+.refo-card {
+    background: #1C1F2E;
+    border: 1px solid #2A2D3E;
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    height: 100%;
+    min-height: 120px;
+    transition: border-color 0.2s;
+}
+
+.refo-card:hover {
+    border-color: #E8A020;
+}
+
+.refo-card.selected {
+    border-color: #E8A020;
+    background: rgba(232,160,32,0.08);
+}
+
+.refo-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #E8A020;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.refo-text {
+    font-size: 0.85rem;
+    color: #B0AFA8;
+    line-height: 1.6;
+}
+
+.refo-card-original {
+    background: #161820;
+    border: 1px dashed #3A3D4E;
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    height: 100%;
+    min-height: 120px;
+}
+
+.refo-original-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #6B6B7A;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.reformulations-section {
+    background: #13151F;
+    border: 1px solid #2A2D3E;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    padding: 1rem 1.5rem 1.25rem 1.5rem;
+    margin-bottom: 0;
+}
+
+.reformulations-title {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #6B6B7A;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+}
+
+/* Stats bar */
 .stats-bar {
     background: #1C1F2E;
     border: 1px solid #2A2D3E;
@@ -144,16 +217,6 @@ html, body, [class*="css"] {
     opacity: 0.4;
 }
 
-.reformulations-label {
-    font-size: 0.65rem;
-    font-weight: 600;
-    color: #6B6B7A;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-}
-
-/* Streamlit natifs */
 [data-testid="stFileUploader"] {
     background-color: #1C1F2E;
     border: 1px dashed #3A3D4E;
@@ -161,15 +224,10 @@ html, body, [class*="css"] {
     padding: 1rem;
 }
 
-[data-testid="stRadio"] label {
-    color: #B0AFA8 !important;
-    font-size: 0.875rem !important;
-}
-
-/* st.info utilisé pour le contenu des exigences */
 [data-testid="stAlert"] {
     background-color: #1A1D2C !important;
     border: 1px solid #2A2D3E !important;
+    border-top: none !important;
     border-radius: 0 0 6px 6px !important;
     color: #B0AFA8 !important;
     margin-top: 0 !important;
@@ -181,9 +239,7 @@ html, body, [class*="css"] {
     line-height: 1.7 !important;
 }
 
-[data-testid="stAlert"] svg {
-    display: none !important;
-}
+[data-testid="stAlert"] svg { display: none !important; }
 
 .stButton > button {
     background-color: #E8A020 !important;
@@ -197,9 +253,7 @@ html, body, [class*="css"] {
     font-size: 0.8rem !important;
 }
 
-.stButton > button:hover {
-    background-color: #F5B53A !important;
-}
+.stButton > button:hover { background-color: #F5B53A !important; }
 
 .stButton > button[kind="secondary"] {
     background-color: transparent !important;
@@ -368,7 +422,7 @@ else:
         elif conforme:
             card_class += " conforme"
 
-        # En-tête de la carte en HTML
+        # En-tête
         st.markdown(f"""
         <div class="{card_class}">
             <div class="exigence-id">{tid_safe}</div>
@@ -378,7 +432,7 @@ else:
         </div>
         """, unsafe_allow_html=True)
 
-        # Contenu via composant natif Streamlit — jamais de problème d'échappement
+        # Contenu original
         st.info(contenu)
 
         # Reformulations
@@ -387,18 +441,58 @@ else:
             st.session_state["selections"][tid] = contenu
 
         elif reformulations:
-            st.markdown('<div class="reformulations-label">Sélectionner une reformulation</div>',
-                        unsafe_allow_html=True)
-            options = reformulations + ["Conserver l'original"]
-            choix = st.radio(
-                label=f"Reformulations {tid}",
-                options=options,
-                label_visibility="collapsed",
-                key=f"radio_{tid}"
-            )
-            st.session_state["selections"][tid] = contenu if choix == "Conserver l'original" else choix
+            # Label section
+            st.markdown("""
+            <div style="background:#13151F; border:1px solid #2A2D3E; border-top:none;
+                        padding:1rem 1.5rem 0.5rem 1.5rem;">
+                <div class="reformulations-title"
+                     style="font-size:0.65rem; font-weight:600; color:#6B6B7A;
+                            letter-spacing:0.15em; text-transform:uppercase;">
+                    Reformulations proposées — sélectionnez celle qui convient
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
-        st.markdown("<div style='margin-bottom:1.5rem'></div>", unsafe_allow_html=True)
+            # 3 colonnes côte à côte
+            col1, col2, col3 = st.columns(3)
+            cols = [col1, col2, col3]
+            selection_actuelle = st.session_state["selections"].get(tid)
+
+            for i, (col, refo) in enumerate(zip(cols, reformulations[:3])):
+                with col:
+                    refo_safe = html.escape(refo)
+                    est_selectionnee = selection_actuelle == refo
+                    card_style = "refo-card selected" if est_selectionnee else "refo-card"
+
+                    st.markdown(f"""
+                    <div class="{card_style}">
+                        <div class="refo-number">Version {i + 1}</div>
+                        <div class="refo-text">{refo_safe}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+                    label_btn = "✓ Sélectionnée" if est_selectionnee else f"Choisir la version {i + 1}"
+                    if st.button(label_btn, key=f"btn_{tid}_{i}", use_container_width=True):
+                        st.session_state["selections"][tid] = refo
+                        st.rerun()
+
+            # Option conserver l'original
+            st.markdown("""
+            <div style="background:#13151F; border:1px solid #2A2D3E; border-top:none;
+                        padding:0.5rem 1.5rem 1rem 1.5rem; border-radius:0 0 6px 6px;">
+            </div>
+            """, unsafe_allow_html=True)
+
+            est_original = selection_actuelle == contenu or selection_actuelle is None
+            if st.button(
+                "↩ Conserver l'exigence originale",
+                key=f"btn_{tid}_original",
+                type="secondary"
+            ):
+                st.session_state["selections"][tid] = contenu
+                st.rerun()
+
+        st.markdown("<div style='margin-bottom:2rem'></div>", unsafe_allow_html=True)
 
     # --- Export ---
     st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
