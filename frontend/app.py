@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # ============================================================
-#  CSS — Dark mode industriel / BTP
+#  CSS
 # ============================================================
 st.markdown("""
 <style>
@@ -23,13 +23,11 @@ html, body, [class*="css"] {
     font-family: 'IBM Plex Sans', sans-serif;
 }
 
-/* Fond général dark */
 .stApp {
     background-color: #0F1117;
     color: #E8E6E0;
 }
 
-/* Header */
 .main-header {
     background-color: #0F1117;
     border-bottom: 2px solid #E8A020;
@@ -57,35 +55,17 @@ html, body, [class*="css"] {
 
 .logo-accent { color: #E8A020; }
 
-/* Paragraphes et textes généraux */
-p, span, div, label {
-    color: #E8E6E0;
-}
-
-/* File uploader */
-[data-testid="stFileUploader"] {
-    background-color: #1C1F2E;
-    border: 1px dashed #3A3D4E;
-    border-radius: 6px;
-    padding: 1rem;
-}
-
-[data-testid="stFileUploader"] label {
-    color: #A0A0B0 !important;
-}
-
-/* Carte exigence */
-.exigence-card {
+.exigence-header {
     background: #1C1F2E;
     border-left: 4px solid #3A3D4E;
-    border-radius: 0 6px 6px 0;
-    padding: 1.25rem 1.5rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    border-radius: 0 6px 0 0;
+    padding: 1rem 1.5rem 0.75rem 1.5rem;
+    margin-bottom: 0;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
 }
 
-.exigence-card.doublon { border-left-color: #E8A020; }
-.exigence-card.conforme { border-left-color: #3DAA6B; }
+.exigence-header.doublon { border-left-color: #E8A020; }
+.exigence-header.conforme { border-left-color: #3DAA6B; }
 
 .exigence-id {
     font-family: 'IBM Plex Mono', monospace;
@@ -101,21 +81,9 @@ p, span, div, label {
     font-size: 1rem;
     font-weight: 600;
     color: #E8E6E0;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.4rem;
 }
 
-.exigence-contenu {
-    font-size: 0.875rem;
-    color: #B0AFA8;
-    line-height: 1.7;
-    padding: 0.75rem 1rem;
-    background: #0F1117;
-    border-radius: 4px;
-    border: 1px solid #2A2D3E;
-    margin-bottom: 0.75rem;
-}
-
-/* Badges */
 .badge-doublon {
     display: inline-block;
     background: rgba(232,160,32,0.15);
@@ -125,7 +93,6 @@ p, span, div, label {
     padding: 0.2rem 0.7rem;
     border-radius: 2px;
     border: 1px solid #E8A020;
-    margin-bottom: 0.75rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
 }
@@ -139,12 +106,10 @@ p, span, div, label {
     padding: 0.2rem 0.7rem;
     border-radius: 2px;
     border: 1px solid #3DAA6B;
-    margin-bottom: 0.75rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
 }
 
-/* Stats bar */
 .stats-bar {
     background: #1C1F2E;
     border: 1px solid #2A2D3E;
@@ -172,7 +137,6 @@ p, span, div, label {
     letter-spacing: 0.12em;
 }
 
-/* Séparateur */
 .section-divider {
     height: 1px;
     background: linear-gradient(to right, #E8A020, transparent);
@@ -180,7 +144,6 @@ p, span, div, label {
     opacity: 0.4;
 }
 
-/* Label reformulations */
 .reformulations-label {
     font-size: 0.65rem;
     font-weight: 600;
@@ -190,21 +153,38 @@ p, span, div, label {
     margin-bottom: 0.5rem;
 }
 
-/* Radio buttons */
+/* Streamlit natifs */
+[data-testid="stFileUploader"] {
+    background-color: #1C1F2E;
+    border: 1px dashed #3A3D4E;
+    border-radius: 6px;
+    padding: 1rem;
+}
+
 [data-testid="stRadio"] label {
     color: #B0AFA8 !important;
     font-size: 0.875rem !important;
 }
 
-[data-testid="stRadio"] > div {
-    background: #0F1117;
-    border: 1px solid #2A2D3E;
-    border-radius: 4px;
-    padding: 0.5rem 0.75rem;
-    margin-bottom: 0.25rem;
+/* st.info utilisé pour le contenu des exigences */
+[data-testid="stAlert"] {
+    background-color: #1A1D2C !important;
+    border: 1px solid #2A2D3E !important;
+    border-radius: 0 0 6px 6px !important;
+    color: #B0AFA8 !important;
+    margin-top: 0 !important;
 }
 
-/* Bouton principal */
+[data-testid="stAlert"] p {
+    color: #B0AFA8 !important;
+    font-size: 0.875rem !important;
+    line-height: 1.7 !important;
+}
+
+[data-testid="stAlert"] svg {
+    display: none !important;
+}
+
 .stButton > button {
     background-color: #E8A020 !important;
     color: #0F1117 !important;
@@ -221,7 +201,6 @@ p, span, div, label {
     background-color: #F5B53A !important;
 }
 
-/* Bouton secondaire (← Nouvelle analyse) */
 .stButton > button[kind="secondary"] {
     background-color: transparent !important;
     color: #6B6B7A !important;
@@ -233,7 +212,6 @@ p, span, div, label {
     color: #E8A020 !important;
 }
 
-/* Download button */
 .stDownloadButton > button {
     background-color: #3DAA6B !important;
     color: #0F1117 !important;
@@ -246,24 +224,8 @@ p, span, div, label {
     font-size: 0.8rem !important;
 }
 
-/* Spinner */
-[data-testid="stSpinner"] {
-    color: #E8A020 !important;
-}
+h1, h2, h3, h4 { color: #E8E6E0 !important; }
 
-/* Titres */
-h1, h2, h3, h4 {
-    color: #E8E6E0 !important;
-}
-
-/* Success / Error messages */
-[data-testid="stAlert"] {
-    background-color: #1C1F2E !important;
-    border-color: #3A3D4E !important;
-    color: #E8E6E0 !important;
-}
-
-/* Masquer éléments Streamlit */
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 header {visibility: hidden;}
@@ -313,7 +275,7 @@ if st.session_state["resultats"] is None:
                         align-items:center; gap:0.75rem;">
                 <span style="font-size:1.2rem">📄</span>
                 <div>
-                    <div style="font-weight:500; font-size:0.9rem; color:#E8E6E0">{fichier.name}</div>
+                    <div style="font-weight:500; font-size:0.9rem; color:#E8E6E0">{html.escape(fichier.name)}</div>
                     <div style="font-size:0.75rem; color:#6B6B7A">{round(fichier.size / 1024)} Ko</div>
                 </div>
             </div>
@@ -371,7 +333,7 @@ else:
             <span class="stat-label">Validées</span>
         </div>
         <div style="margin-left:auto; font-size:0.75rem; color:#6B6B7A; font-family:'IBM Plex Mono',monospace;">
-            {st.session_state["nom_fichier"]}
+            {html.escape(st.session_state["nom_fichier"])}
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -396,31 +358,32 @@ else:
         refo_data = tache.get("reformulations", {})
         conforme = refo_data.get("conforme", False) if isinstance(refo_data, dict) else False
         reformulations = refo_data.get("reformulations", []) if isinstance(refo_data, dict) else []
-        contenu_safe = html.escape(contenu)
-        nom_safe = html.escape(nom)
-        tid_safe = html.escape(str(tid))
 
-        card_class = "exigence-card"
+        tid_safe = html.escape(str(tid))
+        nom_safe = html.escape(nom)
+
+        card_class = "exigence-header"
         if doublon:
             card_class += " doublon"
         elif conforme:
             card_class += " conforme"
 
+        # En-tête de la carte en HTML
         st.markdown(f"""
-            <div class="{card_class}">
-                <div class="exigence-id">{tid_safe}</div>
-                <div class="exigence-nom">{nom_safe}</div>
-                {"<div class='badge-doublon'>⚠ Doublon probable</div>" if doublon else ""}
-                {"<div class='badge-conforme'>✓ Conforme IEEE-830</div>" if conforme else ""}
-                <div class="exigence-contenu">{contenu_safe}</div>
-            </div>
-            """, unsafe_allow_html=True)
+        <div class="{card_class}">
+            <div class="exigence-id">{tid_safe}</div>
+            <div class="exigence-nom">{nom_safe}</div>
+            {"<div class='badge-doublon'>⚠ Doublon probable</div>" if doublon else ""}
+            {"<div class='badge-conforme'>✓ Conforme IEEE-830</div>" if conforme else ""}
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Contenu via composant natif Streamlit — jamais de problème d'échappement
+        st.info(contenu)
+
+        # Reformulations
         if conforme:
-            st.markdown(
-                "<div style='color:#3DAA6B; font-size:0.85rem; margin:-0.5rem 0 1.5rem 0'>"
-                "Cette exigence respecte déjà les critères IEEE-830.</div>",
-                unsafe_allow_html=True
-            )
+            st.success("Cette exigence respecte déjà les critères IEEE-830.")
             st.session_state["selections"][tid] = contenu
 
         elif reformulations:
@@ -435,17 +398,13 @@ else:
             )
             st.session_state["selections"][tid] = contenu if choix == "Conserver l'original" else choix
 
-        st.markdown("<div style='margin-bottom:0.25rem'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='margin-bottom:1.5rem'></div>", unsafe_allow_html=True)
 
     # --- Export ---
     st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
 
     if nb_selections == nb_total:
-        st.markdown(
-            "<div style='color:#3DAA6B; font-weight:500; margin-bottom:1rem; font-size:0.875rem'>"
-            "✓ Toutes les exigences ont été traitées.</div>",
-            unsafe_allow_html=True
-        )
+        st.success("Toutes les exigences ont été traitées. Vous pouvez exporter le rapport.")
     else:
         st.markdown(
             f"<div style='color:#6B6B7A; font-size:0.825rem; margin-bottom:1rem'>"
