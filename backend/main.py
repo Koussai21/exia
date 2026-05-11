@@ -187,3 +187,7 @@ def get_tache(id: str):
         if tache["id"] == id:
             return tache
     raise HTTPException(status_code=404, detail=f"Tâche {id} introuvable")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
