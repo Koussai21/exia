@@ -12,89 +12,86 @@ st.set_page_config(
 )
 
 # ============================================================
-#  CSS — Style sobre et professionnel BTP
+#  CSS — Dark mode industriel / BTP
 # ============================================================
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
-/* Base */
 html, body, [class*="css"] {
     font-family: 'IBM Plex Sans', sans-serif;
 }
 
-/* Fond général */
+/* Fond général dark */
 .stApp {
-    background-color: #F4F2EE;
+    background-color: #0F1117;
+    color: #E8E6E0;
 }
 
-/* Header principal */
+/* Header */
 .main-header {
-    background-color: #1A1A2E;
-    color: #F4F2EE;
-    padding: 2rem 2.5rem;
+    background-color: #0F1117;
+    border-bottom: 2px solid #E8A020;
+    padding: 1.5rem 2.5rem;
     margin: -1rem -1rem 2rem -1rem;
-    border-bottom: 3px solid #E8A020;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
 }
 
 .main-header h1 {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: 600;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     margin: 0;
-    color: #F4F2EE;
+    color: #E8E6E0;
+    text-transform: uppercase;
 }
 
 .main-header .subtitle {
-    font-size: 0.8rem;
-    color: #9A9AB0;
+    font-size: 0.75rem;
+    color: #6B6B7A;
     font-weight: 300;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
-    margin-top: 0.2rem;
+    margin-top: 0.3rem;
 }
 
-.logo-accent {
-    color: #E8A020;
+.logo-accent { color: #E8A020; }
+
+/* Paragraphes et textes généraux */
+p, span, div, label {
+    color: #E8E6E0;
 }
 
-/* Zone d'upload */
-.upload-zone {
-    background: #FFFFFF;
-    border: 2px dashed #C8C4BC;
-    border-radius: 4px;
-    padding: 2.5rem;
-    text-align: center;
-    transition: border-color 0.2s;
+/* File uploader */
+[data-testid="stFileUploader"] {
+    background-color: #1C1F2E;
+    border: 1px dashed #3A3D4E;
+    border-radius: 6px;
+    padding: 1rem;
 }
 
-/* Carte d'exigence */
+[data-testid="stFileUploader"] label {
+    color: #A0A0B0 !important;
+}
+
+/* Carte exigence */
 .exigence-card {
-    background: #FFFFFF;
-    border-left: 4px solid #1A1A2E;
-    border-radius: 0 4px 4px 0;
+    background: #1C1F2E;
+    border-left: 4px solid #3A3D4E;
+    border-radius: 0 6px 6px 0;
     padding: 1.25rem 1.5rem;
     margin-bottom: 1rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
-.exigence-card.doublon {
-    border-left-color: #E8A020;
-}
-
-.exigence-card.conforme {
-    border-left-color: #2D7A4F;
-}
+.exigence-card.doublon { border-left-color: #E8A020; }
+.exigence-card.conforme { border-left-color: #3DAA6B; }
 
 .exigence-id {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 500;
-    color: #9A9AB0;
-    letter-spacing: 0.1em;
+    color: #6B6B7A;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     margin-bottom: 0.3rem;
 }
@@ -102,131 +99,170 @@ html, body, [class*="css"] {
 .exigence-nom {
     font-size: 1rem;
     font-weight: 600;
-    color: #1A1A2E;
-    margin-bottom: 0.5rem;
+    color: #E8E6E0;
+    margin-bottom: 0.6rem;
 }
 
 .exigence-contenu {
     font-size: 0.875rem;
-    color: #4A4A5A;
-    line-height: 1.6;
-    padding: 0.75rem;
-    background: #F4F2EE;
-    border-radius: 3px;
-    margin-bottom: 1rem;
+    color: #B0AFA8;
+    line-height: 1.7;
+    padding: 0.75rem 1rem;
+    background: #0F1117;
+    border-radius: 4px;
+    border: 1px solid #2A2D3E;
+    margin-bottom: 0.75rem;
 }
 
-/* Badge doublon */
+/* Badges */
 .badge-doublon {
     display: inline-block;
-    background: #FEF3CD;
-    color: #856404;
-    font-size: 0.7rem;
-    font-weight: 500;
-    padding: 0.2rem 0.6rem;
+    background: rgba(232,160,32,0.15);
+    color: #E8A020;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 0.2rem 0.7rem;
     border-radius: 2px;
     border: 1px solid #E8A020;
     margin-bottom: 0.75rem;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
 }
 
-/* Badge conforme */
 .badge-conforme {
     display: inline-block;
-    background: #D4EDDA;
-    color: #155724;
-    font-size: 0.7rem;
-    font-weight: 500;
-    padding: 0.2rem 0.6rem;
-    border-radius: 2px;
-    border: 1px solid #2D7A4F;
-    margin-bottom: 0.75rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-}
-
-/* Label reformulations */
-.reformulations-label {
-    font-size: 0.7rem;
+    background: rgba(61,170,107,0.15);
+    color: #3DAA6B;
+    font-size: 0.65rem;
     font-weight: 600;
-    color: #9A9AB0;
-    letter-spacing: 0.12em;
+    padding: 0.2rem 0.7rem;
+    border-radius: 2px;
+    border: 1px solid #3DAA6B;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    margin-bottom: 0.5rem;
-}
-
-/* Boutons de reformulation */
-.stRadio > div {
-    gap: 0.5rem;
 }
 
 /* Stats bar */
 .stats-bar {
-    background: #1A1A2E;
-    color: #F4F2EE;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
+    background: #1C1F2E;
+    border: 1px solid #2A2D3E;
+    color: #E8E6E0;
+    padding: 1rem 1.5rem;
+    border-radius: 6px;
     display: flex;
-    gap: 2rem;
+    gap: 2.5rem;
     margin-bottom: 1.5rem;
     align-items: center;
 }
 
-.stat-item {
-    text-align: center;
-}
-
 .stat-number {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     font-weight: 500;
     color: #E8A020;
+    display: block;
 }
 
 .stat-label {
-    font-size: 0.65rem;
-    color: #9A9AB0;
+    font-size: 0.62rem;
+    color: #6B6B7A;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
 }
 
-/* Séparateur section */
+/* Séparateur */
 .section-divider {
     height: 1px;
-    background: linear-gradient(to right, #1A1A2E, transparent);
+    background: linear-gradient(to right, #E8A020, transparent);
     margin: 2rem 0 1.5rem 0;
+    opacity: 0.4;
+}
+
+/* Label reformulations */
+.reformulations-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #6B6B7A;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+/* Radio buttons */
+[data-testid="stRadio"] label {
+    color: #B0AFA8 !important;
+    font-size: 0.875rem !important;
+}
+
+[data-testid="stRadio"] > div {
+    background: #0F1117;
+    border: 1px solid #2A2D3E;
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.25rem;
 }
 
 /* Bouton principal */
-.stButton > button[kind="primary"] {
-    background-color: #1A1A2E !important;
-    color: #F4F2EE !important;
-    border: none !important;
-    border-radius: 3px !important;
-    font-family: 'IBM Plex Sans', sans-serif !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.05em !important;
-    padding: 0.5rem 2rem !important;
-    transition: background-color 0.2s !important;
-}
-
-.stButton > button[kind="primary"]:hover {
+.stButton > button {
     background-color: #E8A020 !important;
-    color: #1A1A2E !important;
-}
-
-/* Bouton export */
-.stDownloadButton > button {
-    background-color: #2D7A4F !important;
-    color: white !important;
+    color: #0F1117 !important;
     border: none !important;
-    border-radius: 3px !important;
+    border-radius: 4px !important;
     font-family: 'IBM Plex Sans', sans-serif !important;
-    font-weight: 500 !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+    font-size: 0.8rem !important;
 }
 
-/* Masquer éléments Streamlit génériques */
+.stButton > button:hover {
+    background-color: #F5B53A !important;
+}
+
+/* Bouton secondaire (← Nouvelle analyse) */
+.stButton > button[kind="secondary"] {
+    background-color: transparent !important;
+    color: #6B6B7A !important;
+    border: 1px solid #3A3D4E !important;
+}
+
+.stButton > button[kind="secondary"]:hover {
+    border-color: #E8A020 !important;
+    color: #E8A020 !important;
+}
+
+/* Download button */
+.stDownloadButton > button {
+    background-color: #3DAA6B !important;
+    color: #0F1117 !important;
+    border: none !important;
+    border-radius: 4px !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+    font-size: 0.8rem !important;
+}
+
+/* Spinner */
+[data-testid="stSpinner"] {
+    color: #E8A020 !important;
+}
+
+/* Titres */
+h1, h2, h3, h4 {
+    color: #E8E6E0 !important;
+}
+
+/* Success / Error messages */
+[data-testid="stAlert"] {
+    background-color: #1C1F2E !important;
+    border-color: #3A3D4E !important;
+    color: #E8E6E0 !important;
+}
+
+/* Masquer éléments Streamlit */
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 header {visibility: hidden;}
@@ -271,19 +307,19 @@ if st.session_state["resultats"] is None:
 
         if fichier:
             st.markdown(f"""
-            <div style="background:#FFFFFF; border:1px solid #C8C4BC; border-radius:4px;
+            <div style="background:#1C1F2E; border:1px solid #2A2D3E; border-radius:6px;
                         padding:0.75rem 1rem; margin:0.5rem 0; display:flex;
                         align-items:center; gap:0.75rem;">
                 <span style="font-size:1.2rem">📄</span>
                 <div>
-                    <div style="font-weight:500; font-size:0.9rem; color:#1A1A2E">{fichier.name}</div>
-                    <div style="font-size:0.75rem; color:#9A9AB0">{round(fichier.size / 1024)} Ko</div>
+                    <div style="font-weight:500; font-size:0.9rem; color:#E8E6E0">{fichier.name}</div>
+                    <div style="font-size:0.75rem; color:#6B6B7A">{round(fichier.size / 1024)} Ko</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
 
-            if st.button("Lancer l'analyse", type="primary", use_container_width=True):
-                with st.spinner("Lecture du document et extraction des exigences en cours..."):
+            if st.button("Lancer l'analyse", use_container_width=True):
+                with st.spinner("Lecture du document et extraction des exigences..."):
                     try:
                         response = requests.post(
                             "https://exia-production-e983.up.railway.app/analyser",
@@ -300,7 +336,7 @@ if st.session_state["resultats"] is None:
                             st.error(f"Erreur serveur : {response.text}")
 
                     except requests.exceptions.ConnectionError:
-                        st.error("Impossible de contacter le serveur. Vérifiez que FastAPI tourne sur le port 8000.")
+                        st.error("Impossible de contacter le serveur.")
                     except requests.exceptions.Timeout:
                         st.error("Le traitement a pris trop de temps. Essayez avec un document plus court.")
 
@@ -317,32 +353,32 @@ else:
     # --- Barre de stats ---
     st.markdown(f"""
     <div class="stats-bar">
-        <div class="stat-item">
-            <div class="stat-number">{nb_total}</div>
-            <div class="stat-label">Exigences</div>
+        <div>
+            <span class="stat-number">{nb_total}</span>
+            <span class="stat-label">Exigences</span>
         </div>
-        <div class="stat-item">
-            <div class="stat-number">{nb_doublons}</div>
-            <div class="stat-label">Doublons détectés</div>
+        <div>
+            <span class="stat-number">{nb_doublons}</span>
+            <span class="stat-label">Doublons</span>
         </div>
-        <div class="stat-item">
-            <div class="stat-number">{nb_conformes}</div>
-            <div class="stat-label">Conformes IEEE-830</div>
+        <div>
+            <span class="stat-number">{nb_conformes}</span>
+            <span class="stat-label">Conformes IEEE-830</span>
         </div>
-        <div class="stat-item">
-            <div class="stat-number">{nb_selections}/{nb_total}</div>
-            <div class="stat-label">Validées</div>
+        <div>
+            <span class="stat-number">{nb_selections}/{nb_total}</span>
+            <span class="stat-label">Validées</span>
         </div>
-        <div style="margin-left:auto; font-size:0.8rem; color:#9A9AB0">
-            📄 {st.session_state["nom_fichier"]}
+        <div style="margin-left:auto; font-size:0.75rem; color:#6B6B7A; font-family:'IBM Plex Mono',monospace;">
+            {st.session_state["nom_fichier"]}
         </div>
     </div>
     """, unsafe_allow_html=True)
 
     # --- Actions ---
-    col_reset, col_export = st.columns([1, 3])
+    col_reset, _ = st.columns([1, 4])
     with col_reset:
-        if st.button("← Nouvelle analyse"):
+        if st.button("← Nouvelle analyse", type="secondary"):
             st.session_state["resultats"] = None
             st.session_state["selections"] = {}
             st.session_state["nom_fichier"] = ""
@@ -360,7 +396,6 @@ else:
         conforme = refo_data.get("conforme", False) if isinstance(refo_data, dict) else False
         reformulations = refo_data.get("reformulations", []) if isinstance(refo_data, dict) else []
 
-        # Classe CSS selon état
         card_class = "exigence-card"
         if doublon:
             card_class += " doublon"
@@ -377,18 +412,17 @@ else:
         </div>
         """, unsafe_allow_html=True)
 
-        # Reformulations
         if conforme:
             st.markdown(
-                "<div style='color:#2D7A4F; font-size:0.85rem; margin:-0.5rem 0 1rem 0'>"
-                "Cette exigence respecte déjà les critères de rédaction IEEE-830.</div>",
+                "<div style='color:#3DAA6B; font-size:0.85rem; margin:-0.5rem 0 1.5rem 0'>"
+                "Cette exigence respecte déjà les critères IEEE-830.</div>",
                 unsafe_allow_html=True
             )
             st.session_state["selections"][tid] = contenu
 
         elif reformulations:
-            st.markdown('<div class="reformulations-label">Sélectionner une reformulation</div>', unsafe_allow_html=True)
-
+            st.markdown('<div class="reformulations-label">Sélectionner une reformulation</div>',
+                        unsafe_allow_html=True)
             options = reformulations + ["Conserver l'original"]
             choix = st.radio(
                 label=f"Reformulations {tid}",
@@ -396,31 +430,26 @@ else:
                 label_visibility="collapsed",
                 key=f"radio_{tid}"
             )
+            st.session_state["selections"][tid] = contenu if choix == "Conserver l'original" else choix
 
-            if choix == "Conserver l'original":
-                st.session_state["selections"][tid] = contenu
-            else:
-                st.session_state["selections"][tid] = choix
-
-        st.markdown("<div style='margin-bottom:0.5rem'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='margin-bottom:0.25rem'></div>", unsafe_allow_html=True)
 
     # --- Export ---
     st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
 
     if nb_selections == nb_total:
         st.markdown(
-            "<div style='color:#2D7A4F; font-weight:500; margin-bottom:1rem'>"
-            "✓ Toutes les exigences ont été traitées. Vous pouvez exporter le rapport.</div>",
+            "<div style='color:#3DAA6B; font-weight:500; margin-bottom:1rem; font-size:0.875rem'>"
+            "✓ Toutes les exigences ont été traitées.</div>",
             unsafe_allow_html=True
         )
     else:
         st.markdown(
-            f"<div style='color:#9A9AB0; font-size:0.85rem; margin-bottom:1rem'>"
+            f"<div style='color:#6B6B7A; font-size:0.825rem; margin-bottom:1rem'>"
             f"{nb_total - nb_selections} exigence(s) en attente de validation.</div>",
             unsafe_allow_html=True
         )
 
-    # Préparer le contenu texte d'export (Word via exercice 7 à brancher)
     lignes_export = [f"RAPPORT D'ANALYSE — {st.session_state['nom_fichier']}\n"]
     lignes_export.append("=" * 60 + "\n")
     for tache in taches:
@@ -435,7 +464,7 @@ else:
     export_txt = "\n".join(lignes_export)
 
     st.download_button(
-        label="⬇ Télécharger le rapport (.txt)",
+        label="Télécharger le rapport (.txt)",
         data=export_txt,
         file_name=f"rapport_{st.session_state['nom_fichier'].replace('.docx', '')}.txt",
         mime="text/plain",
