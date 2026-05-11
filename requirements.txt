@@ -1,8 +1,9 @@
+fastapi
+uvicorn
+anthropic
 docling
 python-docx
-streamlit
-anthropic
-chromadb
-sentence-transformers
-anthropic
+python-dotenv
 python-multipart
+requests
+streamlit
