@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import html
 
 # ============================================================
 #  CONFIGURATION DE LA PAGE
@@ -395,6 +396,9 @@ else:
         refo_data = tache.get("reformulations", {})
         conforme = refo_data.get("conforme", False) if isinstance(refo_data, dict) else False
         reformulations = refo_data.get("reformulations", []) if isinstance(refo_data, dict) else []
+        contenu_safe = html.escape(contenu)
+        nom_safe = html.escape(nom)
+        tid_safe = html.escape(str(tid))
 
         card_class = "exigence-card"
         if doublon:
@@ -403,15 +407,14 @@ else:
             card_class += " conforme"
 
         st.markdown(f"""
-        <div class="{card_class}">
-            <div class="exigence-id">{tid}</div>
-            <div class="exigence-nom">{nom}</div>
-            {"<div class='badge-doublon'>⚠ Doublon probable</div>" if doublon else ""}
-            {"<div class='badge-conforme'>✓ Conforme IEEE-830</div>" if conforme else ""}
-            <div class="exigence-contenu">{contenu}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
+            <div class="{card_class}">
+                <div class="exigence-id">{tid_safe}</div>
+                <div class="exigence-nom">{nom_safe}</div>
+                {"<div class='badge-doublon'>⚠ Doublon probable</div>" if doublon else ""}
+                {"<div class='badge-conforme'>✓ Conforme IEEE-830</div>" if conforme else ""}
+                <div class="exigence-contenu">{contenu_safe}</div>
+            </div>
+            """, unsafe_allow_html=True)
         if conforme:
             st.markdown(
                 "<div style='color:#3DAA6B; font-size:0.85rem; margin:-0.5rem 0 1.5rem 0'>"
