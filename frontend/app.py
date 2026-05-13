@@ -65,6 +65,7 @@ html, body, [class*="css"] {
 
 .exigence-header.doublon { border-left-color: #E8A020; }
 .exigence-header.conforme { border-left-color: #3DAA6B; }
+.exigence-header.en-attente { border-left-color: #3A3D4E; }
 
 .exigence-id {
     font-family: 'IBM Plex Mono', monospace;
@@ -109,7 +110,6 @@ html, body, [class*="css"] {
     text-transform: uppercase;
 }
 
-/* Carte reformulation */
 .refo-card {
     background: #1C1F2E;
     border: 1px solid #2A2D3E;
@@ -120,9 +120,7 @@ html, body, [class*="css"] {
     transition: border-color 0.2s;
 }
 
-.refo-card:hover {
-    border-color: #E8A020;
-}
+.refo-card:hover { border-color: #E8A020; }
 
 .refo-card.selected {
     border-color: #E8A020;
@@ -145,44 +143,6 @@ html, body, [class*="css"] {
     line-height: 1.6;
 }
 
-.refo-card-original {
-    background: #161820;
-    border: 1px dashed #3A3D4E;
-    border-radius: 6px;
-    padding: 1rem 1.25rem;
-    height: 100%;
-    min-height: 120px;
-}
-
-.refo-original-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.65rem;
-    font-weight: 600;
-    color: #6B6B7A;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-}
-
-.reformulations-section {
-    background: #13151F;
-    border: 1px solid #2A2D3E;
-    border-top: none;
-    border-radius: 0 0 6px 6px;
-    padding: 1rem 1.5rem 1.25rem 1.5rem;
-    margin-bottom: 0;
-}
-
-.reformulations-title {
-    font-size: 0.65rem;
-    font-weight: 600;
-    color: #6B6B7A;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 0.75rem;
-}
-
-/* Stats bar */
 .stats-bar {
     background: #1C1F2E;
     border: 1px solid #2A2D3E;
@@ -287,6 +247,11 @@ header {visibility: hidden;}
 """, unsafe_allow_html=True)
 
 # ============================================================
+#  CONSTANTES
+# ============================================================
+API_URL = "http://127.0.0.1:8000"
+
+# ============================================================
 #  HEADER
 # ============================================================
 st.markdown("""
@@ -307,6 +272,8 @@ if "selections" not in st.session_state:
     st.session_state["selections"] = {}
 if "nom_fichier" not in st.session_state:
     st.session_state["nom_fichier"] = ""
+if "reformulations" not in st.session_state:
+    st.session_state["reformulations"] = {}
 
 # ============================================================
 #  ZONE D'UPLOAD
@@ -339,15 +306,17 @@ if st.session_state["resultats"] is None:
                 with st.spinner("Lecture du document et extraction des exigences..."):
                     try:
                         response = requests.post(
-                            "https://exia-production-e983.up.railway.app/analyser",
+                            f"{API_URL}/extraire",
                             files={"fichier": (fichier.name, fichier, "application/octet-stream")},
-                            timeout=300
+                            timeout=120
                         )
 
                         if response.status_code == 200:
                             data = response.json()
                             st.session_state["resultats"] = data["taches"]
                             st.session_state["nom_fichier"] = data["nom_fichier"]
+                            st.session_state["reformulations"] = {}
+                            st.session_state["selections"] = {}
                             st.rerun()
                         else:
                             st.error(f"Erreur serveur : {response.text}")
@@ -364,7 +333,11 @@ else:
     taches = st.session_state["resultats"]
     nb_total = len(taches)
     nb_doublons = sum(1 for t in taches if t.get("doublon_probable"))
-    nb_conformes = sum(1 for t in taches if t.get("reformulations", {}).get("conforme"))
+    nb_reformulees = len(st.session_state["reformulations"])
+    nb_conformes = sum(
+        1 for t in taches
+        if st.session_state["reformulations"].get(t.get("id"), {}).get("conforme")
+    )
     nb_selections = len(st.session_state["selections"])
 
     # --- Barre de stats ---
@@ -379,8 +352,8 @@ else:
             <span class="stat-label">Doublons</span>
         </div>
         <div>
-            <span class="stat-number">{nb_conformes}</span>
-            <span class="stat-label">Conformes IEEE-830</span>
+            <span class="stat-number">{nb_reformulees}/{nb_total}</span>
+            <span class="stat-label">Reformulées</span>
         </div>
         <div>
             <span class="stat-number">{nb_selections}/{nb_total}</span>
@@ -393,13 +366,43 @@ else:
     """, unsafe_allow_html=True)
 
     # --- Actions ---
-    col_reset, _ = st.columns([1, 4])
+    col_reset, col_all, _ = st.columns([1, 2, 2])
     with col_reset:
         if st.button("← Nouvelle analyse", type="secondary"):
             st.session_state["resultats"] = None
             st.session_state["selections"] = {}
             st.session_state["nom_fichier"] = ""
+            st.session_state["reformulations"] = {}
             st.rerun()
+
+    with col_all:
+        # Bouton pour reformuler toutes les exigences non encore reformulées
+        taches_restantes = [
+            t for t in taches
+            if t.get("id") not in st.session_state["reformulations"]
+        ]
+        if taches_restantes:
+            if st.button(f"Reformuler toutes ({len(taches_restantes)} restantes)"):
+                barre = st.progress(0)
+                for i, tache in enumerate(taches_restantes):
+                    with st.spinner(f"Reformulation {i+1}/{len(taches_restantes)}..."):
+                        try:
+                            resp = requests.post(
+                                f"{API_URL}/reformuler",
+                                json={
+                                    "id": tache["id"],
+                                    "nom": tache["nom"],
+                                    "contenu": tache["contenu"],
+                                    "doublon_probable": tache.get("doublon_probable", False)
+                                },
+                                timeout=60
+                            )
+                            if resp.status_code == 200:
+                                st.session_state["reformulations"][tache["id"]] = resp.json()
+                        except Exception:
+                            pass
+                    barre.progress((i + 1) / len(taches_restantes))
+                st.rerun()
 
     st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
 
@@ -409,18 +412,21 @@ else:
         nom = tache.get("nom", "Sans titre")
         contenu = tache.get("contenu", "")
         doublon = tache.get("doublon_probable", False)
-        refo_data = tache.get("reformulations", {})
-        conforme = refo_data.get("conforme", False) if isinstance(refo_data, dict) else False
-        reformulations = refo_data.get("reformulations", []) if isinstance(refo_data, dict) else []
+
+        # Récupérer les reformulations depuis le session_state
+        refo_data = st.session_state["reformulations"].get(tid)
+        conforme = refo_data.get("conforme", False) if refo_data else False
+        reformulations = refo_data.get("reformulations", []) if refo_data else []
 
         tid_safe = html.escape(str(tid))
         nom_safe = html.escape(nom)
 
+        # Classe CSS de la carte selon état
         card_class = "exigence-header"
-        if doublon:
-            card_class += " doublon"
-        elif conforme:
+        if refo_data and conforme:
             card_class += " conforme"
+        elif doublon:
+            card_class += " doublon"
 
         # En-tête
         st.markdown(f"""
@@ -428,32 +434,58 @@ else:
             <div class="exigence-id">{tid_safe}</div>
             <div class="exigence-nom">{nom_safe}</div>
             {"<div class='badge-doublon'>⚠ Doublon probable</div>" if doublon else ""}
-            {"<div class='badge-conforme'>✓ Conforme IEEE-830</div>" if conforme else ""}
+            {"<div class='badge-conforme'>✓ Conforme IEEE-830</div>" if (refo_data and conforme) else ""}
         </div>
         """, unsafe_allow_html=True)
 
         # Contenu original
         st.info(contenu)
 
-        # Reformulations
-        if conforme:
+        # ── Pas encore reformulé ──────────────────────────────
+        if refo_data is None:
+            col_btn, _ = st.columns([1, 3])
+            with col_btn:
+                if st.button(
+                    "Analyser et reformuler",
+                    key=f"btn_refo_{tid}"
+                ):
+                    with st.spinner("Reformulation en cours..."):
+                        try:
+                            resp = requests.post(
+                                f"{API_URL}/reformuler",
+                                json={
+                                    "id": tid,
+                                    "nom": nom,
+                                    "contenu": contenu,
+                                    "doublon_probable": doublon
+                                },
+                                timeout=60
+                            )
+                            if resp.status_code == 200:
+                                st.session_state["reformulations"][tid] = resp.json()
+                                st.rerun()
+                            else:
+                                st.error("Erreur lors de la reformulation.")
+                        except requests.exceptions.Timeout:
+                            st.error("Délai dépassé. Réessayez.")
+
+        # ── Déjà conforme ─────────────────────────────────────
+        elif conforme:
             st.success("Cette exigence respecte déjà les critères IEEE-830.")
             st.session_state["selections"][tid] = contenu
 
+        # ── Reformulations disponibles ────────────────────────
         elif reformulations:
-            # Label section
             st.markdown("""
             <div style="background:#13151F; border:1px solid #2A2D3E; border-top:none;
                         padding:1rem 1.5rem 0.5rem 1.5rem;">
-                <div class="reformulations-title"
-                     style="font-size:0.65rem; font-weight:600; color:#6B6B7A;
+                <div style="font-size:0.65rem; font-weight:600; color:#6B6B7A;
                             letter-spacing:0.15em; text-transform:uppercase;">
                     Reformulations proposées — sélectionnez celle qui convient
                 </div>
             </div>
             """, unsafe_allow_html=True)
 
-            # 3 colonnes côte à côte
             col1, col2, col3 = st.columns(3)
             cols = [col1, col2, col3]
             selection_actuelle = st.session_state["selections"].get(tid)
@@ -476,14 +508,12 @@ else:
                         st.session_state["selections"][tid] = refo
                         st.rerun()
 
-            # Option conserver l'original
             st.markdown("""
             <div style="background:#13151F; border:1px solid #2A2D3E; border-top:none;
                         padding:0.5rem 1.5rem 1rem 1.5rem; border-radius:0 0 6px 6px;">
             </div>
             """, unsafe_allow_html=True)
 
-            est_original = selection_actuelle == contenu or selection_actuelle is None
             if st.button(
                 "↩ Conserver l'exigence originale",
                 key=f"btn_{tid}_original",
