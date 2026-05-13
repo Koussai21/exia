@@ -3,6 +3,7 @@ uvicorn
 anthropic
 docling
 python-docx
+openpyxl
 python-dotenv
 python-multipart
 requests
